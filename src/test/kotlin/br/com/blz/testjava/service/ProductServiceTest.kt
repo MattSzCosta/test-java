@@ -2,6 +2,7 @@ package br.com.blz.testjava.service
 
 
 import br.com.blz.testjava.exception.ConflictRequestException
+import br.com.blz.testjava.exception.NotFoundException
 import br.com.blz.testjava.model.Inventory
 import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.model.Warehouse
@@ -48,6 +49,22 @@ class ProductServiceTest {
     `when`(respository.save(product)).thenReturn(product)
     assertThrows(ConflictRequestException::class.java) {
       productService.create(product)
+    }
+  }
+
+  @Test
+  fun testFindProductSuccess() {
+    `when`(respository.findBySku(anyLong())).thenReturn(product)
+    val data = productService.findBySku(product.sku)
+    assertNotNull(data)
+    verify(respository, times(1)).findBySku(anyLong())
+  }
+
+  @Test
+  fun testFindProductError() {
+    `when`(respository.findBySku(anyLong())).thenReturn(null)
+    assertThrows(NotFoundException::class.java) {
+      productService.findBySku(anyLong())
     }
   }
 }

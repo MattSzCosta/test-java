@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.hamcrest.Matchers.`is`
+import org.mockito.ArgumentMatchers
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 
 
@@ -49,5 +50,15 @@ class ProducControllerTest {
     )
       .andExpect(status().isCreated)
       .andExpect(jsonPath("$.message", `is`("/product/${product.sku}")))
+  }
+
+  @Test
+  fun testGetProduct() {
+    `when`(productService.findBySku(ArgumentMatchers.anyLong())).thenReturn(product)
+    mvc.perform(
+      get("/product/1234").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+    )
+      .andExpect(status().isOk)
   }
 }

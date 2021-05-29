@@ -2,6 +2,7 @@ package br.com.blz.testjava.controller
 
 import br.com.blz.testjava.controller.dto.response.CreateResponse
 import br.com.blz.testjava.controller.dto.request.ProductCreateRequest
+import br.com.blz.testjava.controller.dto.response.ProductGetResponse
 import br.com.blz.testjava.service.IProductService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -19,5 +20,11 @@ class ProductController {
   fun createProduct(@RequestBody product: ProductCreateRequest): CreateResponse {
     val newProduct = productService.create(product = product.toProduct())
     return CreateResponse("/product/${newProduct.sku}")
+  }
+
+  @GetMapping("/{sku}")
+  @ResponseStatus(HttpStatus.OK)
+  fun getProduct(@PathVariable("sku") sku: Long): ProductGetResponse {
+    return ProductGetResponse(productService.findBySku(sku))
   }
 }

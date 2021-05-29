@@ -16,4 +16,8 @@ class ProductRepository: IProductRepository {
     listProduct.add(product)
     return product
   }
+
+  override fun findBySku(sku: Long): Product? {
+    return listProduct.find { it.sku == sku }
+  }
 }
