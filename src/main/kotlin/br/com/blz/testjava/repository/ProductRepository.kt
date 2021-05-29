@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class ProductRepository: IProductRepository {
 
-  val listProduct: MutableList<Product> = mutableListOf()
+ private val listProduct: MutableList<Product> = mutableListOf()
 
   override fun countBySku(sku: Long): Int {
     return listProduct.count{ it.sku == sku}
@@ -19,5 +19,9 @@ class ProductRepository: IProductRepository {
 
   override fun findBySku(sku: Long): Product? {
     return listProduct.find { it.sku == sku }
+  }
+
+  override fun update(sku: Long, product: Product) {
+    listProduct.replaceAll {  if(it.sku == sku) product else it  }
   }
 }

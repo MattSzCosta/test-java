@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.hamcrest.Matchers.`is`
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 
 
@@ -60,5 +61,16 @@ class ProducControllerTest {
         .accept(MediaType.APPLICATION_JSON)
     )
       .andExpect(status().isOk)
+  }
+
+  @Test
+  fun testPutProduct() {
+    Mockito.doNothing().`when`(productService).updateBySku(product.sku, product)
+    mvc.perform(
+      put("/product/43264").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(JsonUtils.asJsonString(product))
+    )
+      .andExpect(status().isNoContent)
   }
 }

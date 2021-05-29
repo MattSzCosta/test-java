@@ -31,4 +31,15 @@ class ProductService: IProductService {
   override fun findBySku(sku: Long): Product {
     return productRepository.findBySku(sku) ?: throw NotFoundException()
   }
+
+  override fun updateBySku(sku: Long, product: Product) {
+    if(product.sku != sku) {
+      throw ConflictRequestException("header and body Sku are not the same")
+    }
+
+    if(!hasProductBySku(sku)) {
+      throw NotFoundException("Product not found")
+    }
+    productRepository.update(sku, product)
+  }
 }

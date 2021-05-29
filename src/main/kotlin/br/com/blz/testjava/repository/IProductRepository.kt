@@ -6,4 +6,5 @@ interface IProductRepository {
   fun countBySku(sku: Long): Int
   fun save(product: Product): Product
   fun findBySku(sku: Long): Product?
+  fun update(sku:Long, product: Product)
 }

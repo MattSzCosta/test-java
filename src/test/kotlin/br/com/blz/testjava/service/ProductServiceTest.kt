@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.test.context.junit4.SpringRunner
 import org.junit.Assert.assertThrows
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito.*
 import kotlin.test.assertNotNull
 
@@ -66,5 +67,26 @@ class ProductServiceTest {
     assertThrows(NotFoundException::class.java) {
       productService.findBySku(anyLong())
     }
+  }
+
+  @Test
+  fun testUpdateProductSuccess() {
+    `when`(respository.countBySku(anyLong())).thenReturn(1)
+    doNothing().`when`(respository).update(product.sku, product)
+    assertDoesNotThrow { productService.updateBySku(product.sku, product) }
+  }
+
+  @Test
+  fun testUpdateProductConflictError() {
+    `when`(respository.countBySku(anyLong())).thenReturn(1)
+    doNothing().`when`(respository).update(product.sku, product)
+    assertThrows(ConflictRequestException::class.java) { productService.updateBySku(123L, product) }
+  }
+
+  @Test
+  fun testUpdateProductNotFoundError() {
+    `when`(respository.countBySku(anyLong())).thenReturn(0)
+    doNothing().`when`(respository).update(product.sku, product)
+    assertThrows(NotFoundException::class.java) { productService.updateBySku(product.sku, product) }
   }
 }

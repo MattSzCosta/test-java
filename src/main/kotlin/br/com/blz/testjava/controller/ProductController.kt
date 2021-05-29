@@ -2,6 +2,7 @@ package br.com.blz.testjava.controller
 
 import br.com.blz.testjava.controller.dto.response.CreateResponse
 import br.com.blz.testjava.controller.dto.request.ProductCreateRequest
+import br.com.blz.testjava.controller.dto.request.ProductUpdateRequest
 import br.com.blz.testjava.controller.dto.response.ProductGetResponse
 import br.com.blz.testjava.service.IProductService
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,5 +27,11 @@ class ProductController {
   @ResponseStatus(HttpStatus.OK)
   fun getProduct(@PathVariable("sku") sku: Long): ProductGetResponse {
     return ProductGetResponse(productService.findBySku(sku))
+  }
+
+  @PutMapping("/{sku}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  fun updateProduct(@PathVariable("sku") sku: Long,@RequestBody product: ProductUpdateRequest) {
+    productService.updateBySku(sku, product.toProduct())
   }
 }
