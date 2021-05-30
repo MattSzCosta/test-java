@@ -1,5 +1,7 @@
 package br.com.blz.testjava.controller
 
+import br.com.blz.testjava.exception.ConflictRequestException
+import br.com.blz.testjava.exception.NotFoundException
 import br.com.blz.testjava.model.Inventory
 import br.com.blz.testjava.model.Product
 import br.com.blz.testjava.model.Warehouse
@@ -22,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.hamcrest.Matchers.`is`
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.doThrow
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 
 
@@ -54,6 +57,16 @@ class ProducControllerTest {
   }
 
   @Test
+  fun testPostProductError() {
+    doThrow(ConflictRequestException("error")).`when`(productService).create(product)
+    mvc.perform(
+      post("/product/").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(JsonUtils.asJsonString(product))
+    ).andExpect(status().isConflict)
+  }
+
+  @Test
   fun testGetProduct() {
     `when`(productService.findBySku(ArgumentMatchers.anyLong())).thenReturn(product)
     mvc.perform(
@@ -61,6 +74,28 @@ class ProducControllerTest {
         .accept(MediaType.APPLICATION_JSON)
     )
       .andExpect(status().isOk)
+  }
+
+  @Test
+  fun testPutProductConflictError() {
+    doThrow(ConflictRequestException("error")).`when`(productService).updateBySku(product.sku, product)
+    mvc.perform(
+      put("/product/43264").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(JsonUtils.asJsonString(product))
+    )
+      .andExpect(status().isConflict)
+  }
+
+  @Test
+  fun testPutProductNotFoundError() {
+    doThrow(NotFoundException("error")).`when`(productService).updateBySku(product.sku, product)
+    mvc.perform(
+      put("/product/43264").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(JsonUtils.asJsonString(product))
+    )
+      .andExpect(status().isNotFound)
   }
 
   @Test
