@@ -34,4 +34,11 @@ class ProductController {
   fun updateProduct(@PathVariable("sku") sku: Long,@RequestBody product: ProductUpdateRequest) {
     productService.updateBySku(sku, product.toProduct())
   }
+
+
+  @DeleteMapping("/{sku}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  fun deleteProduct(@PathVariable("sku") sku: Long) {
+    productService.delete(sku)
+  }
 }

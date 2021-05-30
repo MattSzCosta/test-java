@@ -24,4 +24,9 @@ class ProductRepository: IProductRepository {
   override fun update(sku: Long, product: Product) {
     listProduct.replaceAll {  if(it.sku == sku) product else it  }
   }
+
+  override fun deleteBySku(sku: Long): Boolean {
+    return listProduct.removeIf { it.sku == sku }
+  }
+
 }

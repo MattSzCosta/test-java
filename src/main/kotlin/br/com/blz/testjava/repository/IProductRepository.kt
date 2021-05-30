@@ -7,4 +7,5 @@ interface IProductRepository {
   fun save(product: Product): Product
   fun findBySku(sku: Long): Product?
   fun update(sku:Long, product: Product)
+  fun deleteBySku(sku: Long): Boolean
 }

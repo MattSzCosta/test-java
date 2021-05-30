@@ -42,4 +42,9 @@ class ProductService: IProductService {
     }
     productRepository.update(sku, product)
   }
+
+
+  override fun delete(sku: Long) {
+    productRepository.deleteBySku(sku)
+  }
 }

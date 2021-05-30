@@ -89,4 +89,10 @@ class ProductServiceTest {
     doNothing().`when`(respository).update(product.sku, product)
     assertThrows(NotFoundException::class.java) { productService.updateBySku(product.sku, product) }
   }
+
+  @Test
+  fun testDeleteProductSucess() {
+    `when`(respository.deleteBySku(anyLong())).thenReturn(true)
+    assertDoesNotThrow { productService.delete(product.sku) }
+  }
 }

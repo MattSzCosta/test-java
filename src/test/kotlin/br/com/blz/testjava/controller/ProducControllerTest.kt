@@ -73,4 +73,14 @@ class ProducControllerTest {
     )
       .andExpect(status().isNoContent)
   }
+
+
+  @Test
+  fun testDeleteProduct() {
+    Mockito.doNothing().`when`(productService).updateBySku(product.sku, product)
+    mvc.perform(
+      delete("/product/43264").contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isNoContent)
+  }
 }
